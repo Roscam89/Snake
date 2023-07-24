@@ -35,69 +35,57 @@ for (let i = 0; i < snakeSize; i++) {
 }
 
 function snakeMoveRight() {
-  if (snakeDirection !== "left") {
-    snakeDirection = "right";
-    let point = snakeCoordsObj.slice(-1)[0]; //head
+  let point = snakeCoordsObj.slice(-1)[0]; //head
 
-    let remPoint = snakeCoordsObj.slice(0)[0];
+  let remPoint = snakeCoordsObj.slice(0)[0];
 
-    c.fillRect(point.Y + 6, point.X, snakeW, snakeH);
-    snakeCoordsObj.push({ Y: point.Y + 6, X: point.X });
+  c.fillRect(point.Y + 6, point.X, snakeW, snakeH);
+  snakeCoordsObj.push({ Y: point.Y + 6, X: point.X });
 
-    c.clearRect(remPoint.Y, remPoint.X, snakeW, snakeH);
-    snakeCoordsObj.shift();
+  c.clearRect(remPoint.Y, remPoint.X, snakeW, snakeH);
+  snakeCoordsObj.shift();
 
-    console.log(snakeCoordsObj);
-  }
+  console.log(snakeCoordsObj);
 }
 
 function snakeMoveLeft() {
-  if (snakeDirection !== "right") {
-    snakeDirection = "left";
-    let pointl = snakeCoordsObj.slice(-1)[0]; //tail
-    let remPointl = snakeCoordsObj.slice(0)[0];
+  let pointl = snakeCoordsObj.slice(-1)[0]; //tail
+  let remPointl = snakeCoordsObj.slice(0)[0];
 
-    c.fillRect(pointl.Y - 6, pointl.X, snakeW, snakeH);
-    snakeCoordsObj.push({ Y: pointl.Y - 6, X: pointl.X });
+  c.fillRect(pointl.Y - 6, pointl.X, snakeW, snakeH);
+  snakeCoordsObj.push({ Y: pointl.Y - 6, X: pointl.X });
 
-    c.clearRect(remPointl.Y, remPointl.X, snakeW, snakeH);
+  c.clearRect(remPointl.Y, remPointl.X, snakeW, snakeH);
 
-    snakeCoordsObj.shift();
+  snakeCoordsObj.shift();
 
-    console.log(snakeDirection);
-  }
+  console.log(snakeDirection);
 }
 
 function snakeMoveUp() {
-  if (snakeDirection !== "down") {
-    snakeDirection = "up";
-    let headSnake = snakeCoordsObj.slice(-1)[0];
-    let tailSnake = snakeCoordsObj.slice(0)[0];
+  let headSnake = snakeCoordsObj.slice(-1)[0];
+  let tailSnake = snakeCoordsObj.slice(0)[0];
 
-    c.fillRect(headSnake.Y, headSnake.X - 6, snakeW, snakeH);
+  c.fillRect(headSnake.Y, headSnake.X - 6, snakeW, snakeH);
 
-    snakeCoordsObj.push({ Y: headSnake.Y, X: headSnake.X - 6 });
-    snakeCoordsObj.shift();
+  snakeCoordsObj.push({ Y: headSnake.Y, X: headSnake.X - 6 });
+  snakeCoordsObj.shift();
 
-    c.clearRect(tailSnake.Y, tailSnake.X, snakeW, snakeH);
+  c.clearRect(tailSnake.Y, tailSnake.X, snakeW, snakeH);
 
-    console.log(snakeDirection);
-  }
+  console.log(snakeDirection);
 }
 
 function snakeMoveDown() {
-  if (snakeDirection !== "up") {
-    snakeDirection = "down";
-    let headSnake = snakeCoordsObj.slice(-1)[0];
-    let tailSnake = snakeCoordsObj.slice(0)[0];
+  let headSnake = snakeCoordsObj.slice(-1)[0];
+  let tailSnake = snakeCoordsObj.slice(0)[0];
 
-    c.fillRect(headSnake.Y, headSnake.X + 6, snakeW, snakeH);
-    snakeCoordsObj.push({ Y: headSnake.Y, X: headSnake.X + 6 });
-    snakeCoordsObj.shift();
+  c.fillRect(headSnake.Y, headSnake.X + 6, snakeW, snakeH);
+  snakeCoordsObj.push({ Y: headSnake.Y, X: headSnake.X + 6 });
+  snakeCoordsObj.shift();
 
-    c.clearRect(tailSnake.Y, tailSnake.X, snakeW, snakeH);
-    console.log(snakeDirection);
-  }
+  c.clearRect(tailSnake.Y, tailSnake.X, snakeW, snakeH);
+  console.log(snakeDirection);
 }
 
 function food() {
@@ -113,19 +101,34 @@ btnDown.addEventListener("click", snakeMoveDown);
 
 addEventListener("keyup", function (e) {
   if (e.code == "ArrowUp") {
-    snakeMoveUp();
+    if (snakeDirection !== "down") snakeDirection = "up";
   }
 
   if (e.code == "ArrowDown") {
-    snakeMoveDown();
+    if (snakeDirection !== "up") snakeDirection = "down";
   }
   if (e.code == "ArrowRight") {
-    snakeMoveRight();
+    if (snakeDirection !== "left") snakeDirection = "right";
   }
   if (e.code == "ArrowLeft") {
-    snakeMoveLeft();
+    if (snakeDirection !== "right") snakeDirection = "left";
   }
 });
+
+setInterval(function () {
+  if (snakeDirection === "right") {
+    snakeMoveRight();
+  }
+  if (snakeDirection === "left") {
+    snakeMoveLeft();
+  }
+  if (snakeDirection === "up") {
+    snakeMoveUp();
+  }
+  if (snakeDirection === "down") {
+    snakeMoveDown();
+  }
+}, 500);
 
 food();
 
