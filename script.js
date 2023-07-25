@@ -32,60 +32,69 @@ for (let i = 0; i < snakeSize; i++) {
   };
 
   snakeCoordsObj.push(point);
+  food();
 }
 
 function snakeMoveRight() {
   let point = snakeCoordsObj.slice(-1)[0]; //head
-
   let remPoint = snakeCoordsObj.slice(0)[0];
-
+  if (point.Y > 300) {
+    point.Y = -6;
+  }
   c.fillRect(point.Y + 6, point.X, snakeW, snakeH);
   snakeCoordsObj.push({ Y: point.Y + 6, X: point.X });
-
   c.clearRect(remPoint.Y, remPoint.X, snakeW, snakeH);
   snakeCoordsObj.shift();
 
-  console.log(snakeCoordsObj);
+  //console.log(snakeCoordsObj, point.Y);
 }
 
 function snakeMoveLeft() {
   let pointl = snakeCoordsObj.slice(-1)[0]; //tail
   let remPointl = snakeCoordsObj.slice(0)[0];
 
+  if (pointl.Y < -6) {
+    pointl.Y = 300;
+  }
+
   c.fillRect(pointl.Y - 6, pointl.X, snakeW, snakeH);
   snakeCoordsObj.push({ Y: pointl.Y - 6, X: pointl.X });
-
   c.clearRect(remPointl.Y, remPointl.X, snakeW, snakeH);
-
   snakeCoordsObj.shift();
 
-  console.log(snakeDirection);
+  // console.log(snakeDirection);
 }
 
 function snakeMoveUp() {
   let headSnake = snakeCoordsObj.slice(-1)[0];
   let tailSnake = snakeCoordsObj.slice(0)[0];
 
-  c.fillRect(headSnake.Y, headSnake.X - 6, snakeW, snakeH);
+  if (headSnake.X < -6) {
+    headSnake.X = 146;
+  }
 
+  c.fillRect(headSnake.Y, headSnake.X - 6, snakeW, snakeH);
   snakeCoordsObj.push({ Y: headSnake.Y, X: headSnake.X - 6 });
   snakeCoordsObj.shift();
-
   c.clearRect(tailSnake.Y, tailSnake.X, snakeW, snakeH);
 
-  console.log(snakeDirection);
+  // console.log(snakeCoordsObj);
 }
 
 function snakeMoveDown() {
   let headSnake = snakeCoordsObj.slice(-1)[0];
   let tailSnake = snakeCoordsObj.slice(0)[0];
 
+  if (headSnake.X > 146) {
+    headSnake.X = -6;
+  }
+
   c.fillRect(headSnake.Y, headSnake.X + 6, snakeW, snakeH);
   snakeCoordsObj.push({ Y: headSnake.Y, X: headSnake.X + 6 });
   snakeCoordsObj.shift();
-
   c.clearRect(tailSnake.Y, tailSnake.X, snakeW, snakeH);
-  console.log(snakeDirection);
+
+  // console.log(snakeDirection);
 }
 
 function food() {
@@ -94,10 +103,10 @@ function food() {
 }
 
 console.log(snakeCoordsObj, snakeDirection);
-btnRight.addEventListener("click", snakeMoveRight);
-btnLeft.addEventListener("click", snakeMoveLeft);
-btnUp.addEventListener("click", snakeMoveUp);
-btnDown.addEventListener("click", snakeMoveDown);
+//btnRight.addEventListener("click", snakeMoveRight);
+//btnLeft.addEventListener("click", snakeMoveLeft);
+//btnUp.addEventListener("click", snakeMoveUp);
+//btnDown.addEventListener("click", snakeMoveDown);
 
 addEventListener("keyup", function (e) {
   if (e.code == "ArrowUp") {
@@ -129,22 +138,3 @@ setInterval(function () {
     snakeMoveDown();
   }
 }, 500);
-
-food();
-
-/*function snakeMoveLeft() {
-  if (snakeDirection !== "right") {
-    snakeDirection = "left";
-    let pointl = snakeCoordsObj.slice(0)[0]; //tail
-    let remPointl = snakeCoordsObj.slice(-1)[0];
-
-    c.fillRect(pointl.Y - 6, pointl.X, snakeW, snakeH);
-    snakeCoordsObj.unshift({ Y: pointl.Y - 6, X: pointl.X });
-
-    c.clearRect(remPointl.Y, remPointl.X, snakeW, snakeH);
-
-    snakeCoordsObj.pop();
-
-    console.log(snakeDirection);
-  }
-}*/
