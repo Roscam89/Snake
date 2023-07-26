@@ -11,11 +11,16 @@ let c = canvas.getContext("2d");
 //x 0-146
 
 let snakeY = 120;
-let snakeX = 80;
-let snakeW = 5;
-let snakeH = 5;
+let snakeX = 60;
+let snakeW = 6;
+let snakeH = 6;
+let snakePix = 6;
 let snakeSize = 4;
 let snakeDirection = "right";
+let foodY = Math.floor(Math.random() * 288);
+let foodX = Math.floor(Math.random() * 146);
+let foodS = "not present";
+let gameSpeed = 150;
 
 const snakeCoords = [snakeY, snakeX];
 
@@ -32,81 +37,70 @@ for (let i = 0; i < snakeSize; i++) {
   };
 
   snakeCoordsObj.push(point);
-  food();
 }
 
-function snakeMoveRight() {
-  let point = snakeCoordsObj.slice(-1)[0]; //head
-  let remPoint = snakeCoordsObj.slice(0)[0];
-  if (point.Y > 300) {
-    point.Y = -6;
-  }
-  c.fillRect(point.Y + 6, point.X, snakeW, snakeH);
-  snakeCoordsObj.push({ Y: point.Y + 6, X: point.X });
-  c.clearRect(remPoint.Y, remPoint.X, snakeW, snakeH);
-  snakeCoordsObj.shift();
-
-  //console.log(snakeCoordsObj, point.Y);
-}
-
-function snakeMoveLeft() {
-  let pointl = snakeCoordsObj.slice(-1)[0]; //tail
-  let remPointl = snakeCoordsObj.slice(0)[0];
-
-  if (pointl.Y < -6) {
-    pointl.Y = 300;
-  }
-
-  c.fillRect(pointl.Y - 6, pointl.X, snakeW, snakeH);
-  snakeCoordsObj.push({ Y: pointl.Y - 6, X: pointl.X });
-  c.clearRect(remPointl.Y, remPointl.X, snakeW, snakeH);
-  snakeCoordsObj.shift();
-
-  // console.log(snakeDirection);
-}
-
-function snakeMoveUp() {
+function move(Y, X) {
   let headSnake = snakeCoordsObj.slice(-1)[0];
   let tailSnake = snakeCoordsObj.slice(0)[0];
+
+  if (headSnake.Y > 300) {
+    headSnake.Y = -6;
+  }
+
+  if (headSnake.Y < -6) {
+    headSnake.Y = 300;
+  }
 
   if (headSnake.X < -6) {
     headSnake.X = 146;
   }
 
-  c.fillRect(headSnake.Y, headSnake.X - 6, snakeW, snakeH);
-  snakeCoordsObj.push({ Y: headSnake.Y, X: headSnake.X - 6 });
-  snakeCoordsObj.shift();
-  c.clearRect(tailSnake.Y, tailSnake.X, snakeW, snakeH);
-
-  // console.log(snakeCoordsObj);
-}
-
-function snakeMoveDown() {
-  let headSnake = snakeCoordsObj.slice(-1)[0];
-  let tailSnake = snakeCoordsObj.slice(0)[0];
-
   if (headSnake.X > 146) {
     headSnake.X = -6;
   }
 
-  c.fillRect(headSnake.Y, headSnake.X + 6, snakeW, snakeH);
-  snakeCoordsObj.push({ Y: headSnake.Y, X: headSnake.X + 6 });
-  snakeCoordsObj.shift();
+  c.fillRect(headSnake.Y + Y, headSnake.X + X, snakeW, snakeH);
+  snakeCoordsObj.push({ Y: headSnake.Y + Y, X: headSnake.X + X });
   c.clearRect(tailSnake.Y, tailSnake.X, snakeW, snakeH);
+  snakeCoordsObj.shift();
+  // console.log(headSnake.Y);
+}
 
-  // console.log(snakeDirection);
+function snakeMoveRight() {
+  move(6, 0);
+}
+
+function snakeMoveLeft() {
+  move(-6, 0);
+}
+
+function snakeMoveUp() {
+  move(0, -6);
+}
+
+function snakeMoveDown() {
+  move(0, 6);
 }
 
 function food() {
-  //fillStyle = "rgb(255,0,0)";
-  c.fillRect(100, 62, snakeW, snakeH);
+  let headSnake = snakeCoordsObj.slice(-1)[0];
+  if (foodS === "not present") {
+    foodY = Math.floor(Math.random() * 288);
+    foodX = Math.floor(Math.random() * 146);
+    if (foodY % 6 == 0 && foodX % 6 == 0) {
+      c.fillRect(foodY, foodX, snakeW, snakeH);
+      foodS = "present";
+    }
+  }
+
+  if (foodY === headSnake.Y && foodX === headSnake.X) {
+    foodS = "not present";
+    c.fillRect(headSnake.Y + 6, headSnake.X, snakeW, snakeH);
+    snakeCoordsObj.push({ Y: headSnake.Y + 6, X: headSnake.X });
+  }
 }
 
-console.log(snakeCoordsObj, snakeDirection);
-//btnRight.addEventListener("click", snakeMoveRight);
-//btnLeft.addEventListener("click", snakeMoveLeft);
-//btnUp.addEventListener("click", snakeMoveUp);
-//btnDown.addEventListener("click", snakeMoveDown);
+setInterval(food, 80);
 
 addEventListener("keyup", function (e) {
   if (e.code == "ArrowUp") {
@@ -137,4 +131,11 @@ setInterval(function () {
   if (snakeDirection === "down") {
     snakeMoveDown();
   }
-}, 500);
+  sScore();
+}, gameSpeed);
+
+function sScore() {
+  let score = snakeCoordsObj.length - 4;
+  if (score > 5) {
+  }
+}
